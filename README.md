@@ -38,7 +38,7 @@ Empresas de estacionamento privativo que não possuem capital suficiente para in
 
 ### Introdução
 
-O banco de dados local do aplicativo ParkPag foi modelado em SQLite e é composto por quatro tabelas: CLIENTE, VEICULO, TARIFA e ESTADIA. O modelo atende aos requisitos funcionais RF01 a RF09 e às exigências mínimas da atividade, conforme o quadro a seguir.
+O banco de dados local do aplicativo ParkPag foi modelado em SQLite e é composto por quatro tabelas: CLIENTE, VEICULO, TARIFA e ESTADIA. O modelo atende aos requisitos funcionais RU01 a RU09 e às exigências mínimas da atividade, conforme o quadro a seguir.
 
 Para mais dúvidas técnicas acesse: [Saiba mais](./docs/docs-modelo-er.md)
 
