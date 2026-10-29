@@ -10,6 +10,18 @@ O aplicativo ParkPag permite que o negócio cadastre seus clientes e vincule um 
 
 Empresas de estacionamento privativo que não possuem capital suficiente para investir em totens automatizados com leitura dos horários de entrada e saída e sistema de cancelas.
 
+## Requisitos do usuário
+
+- **RU01:** O usuário deve poder cadastrar os clientes do estacionamento.
+- **RU02:** O usuário deve poder cadastrar um ou mais veículos para cada cliente.
+- **RU03:** O usuário deve poder registrar manualmente a data e o horário de entrada de um veículo no estacionamento.
+- **RU04:** O usuário deve poder registrar manualmente a data e o horário de saída de um veículo.
+- **RU05:** O usuário deve receber o cálculo automático do valor a ser cobrado pela permanência do veículo.
+- **RU06:** O usuário deve poder consultar os dados dos clientes e os veículos associados a eles.
+- **RU07:** O usuário deve poder consultar o tempo de permanência e o valor calculado para cada estadia.
+- **RU08:** O usuário deve poder identificar a qual cliente pertence determinado veículo.
+- **RU09:** O usuário deve conseguir utilizar o sistema sem depender de equipamentos automatizados para registrar a entrada e a saída dos veículos.
+
 ## Modelo Entidade-Relacionamento (ER) do Banco de Dados Local
 
 ### Introdução
