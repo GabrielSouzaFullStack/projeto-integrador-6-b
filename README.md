@@ -53,6 +53,7 @@ Para mais dúvidas técnicas acesse: [Saiba mais](./docs/docs-modelo-er.md)
 - Ionic - Link de referência: https://ionicframework.com/docs/
 - Angular - Link de referência: https://angular.dev/
 - TypeScript - Link de referência: https://www.typescriptlang.org/
+- Node.js - Link de referência: https://nodejs.org/pt-br
 - Capacitor - Link de referência: https://capacitorjs.com/
 - SQLite - Link de referência: https://www.sqlite.org/
 
