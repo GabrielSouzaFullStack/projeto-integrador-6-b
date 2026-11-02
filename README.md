@@ -47,6 +47,11 @@ Para mais dúvidas técnicas acesse: [Saiba mais](./docs/docs-modelo-er.md)
 ![Diagrama ER](./images/diagrama-er.png)
 
 ---
+## 8. Geração do arquivo APK
+
+O APK do ParkPag será gerado com o Capacitor, que transforma o aplicativo Ionic/Angular em um projeto Android nativo. Esse projeto é compilado pelo Gradle, pelo Android Studio ou pela linha de comando, gerando o arquivo `.apk` que pode ser instalado diretamente no celular.
+
+Para mais dúvidas técnicas acesse: [Saiba mais](./docs/docs-geracao-apk.md)
 
 ## 9. Tecnologias, bibliotecas e linguagens de programação a ser utilizada
 
