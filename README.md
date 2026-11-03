@@ -32,7 +32,7 @@ Empresas de estacionamento privativo que não possuem capital suficiente para in
 - **Gerenciamento de Veículos:** Permite cadastrar e consultar os veículos vinculados aos clientes.
 - **Registro de Entrada e Saída:** Controla a movimentação dos veículos no estacionamento, registrando horários de entrada e saída.
 - **Controle de Pagamentos:** Realiza o registro e a consulta dos valores referentes aos serviços de estacionamento.
-- **Histórico de Movimentações:** Disponibiliza a consulta dos registros de estacionamento realizados, permitindo o acompanhamento das movimentações anteriores.
+- **Integrantes:** Lista o nome de todos integrantes da equipe, responsáveis pela criação do applicativo.
 
 ## 5. Modelo Entidade-Relacionamento (ER) do Banco de Dados Local
 
