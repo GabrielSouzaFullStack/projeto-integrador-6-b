@@ -57,46 +57,46 @@ As telas foram organizadas de acordo com os módulos do sistema, contemplando o 
 
 Apresenta a tela de abertura do aplicativo e o menu de navegação para acesso às principais funcionalidades.
 
-![Tela Inicial](./wireframes/01.tela-inicial.png)
+![Tela Inicial](./wireframes/01-tela-inicial.png)
 ![Menu Principal](./wireframes/02-menu-principal.png)
 
 ## 6.2 Gerenciamento de Clientes
 
 Apresenta as telas de listagem, cadastro e visualização dos detalhes dos clientes cadastrados.
 
-![Lista de Clientes](./wireframes/03.lista-de-clientes.png)
+![Lista de Clientes](./wireframes/03-lista-de-clientes.png)
 ![Cadastro de Clientes](./wireframes/04-cadastro-de-clientes.png)
-![Detalhes do Cliente](./wireframes/05.detalhes-do-cliente.png)
+![Detalhes do Cliente](./wireframes/05-detalhes-do-cliente.png)
 
 ## 6.3 Gerenciamento de Veículos
 
 Demonstra o cadastro e a consulta dos veículos vinculados aos respectivos clientes.
 
-![Gerenciamento de Veículos](./wireframes/06.Gerenciamento-de-%20veículos.png)
+![Gerenciamento de Veículos](./wireframes/06-gerenciamento-de-veiculos.png)
 
 ## 6.4 Gerenciamento de Veículos
 
 Apresenta as telas responsáveis pelo registro manual dos horários de entrada e saída dos veículos.
 
-![Registro de Entrada e Saída](./wireframes/07.registro-de-entrada-e-saída.png)
+![Registro de Entrada e Saída](./wireframes/07-registro-de-entrada-e-saida.png)
 
 ## 6.5 Controle de Pagamentos
 
 Demonstra a apresentação do tempo de permanência e o cálculo automático do valor a ser pago pelo estacionamento.
 
-![Controle de Pagamentos](./wireframes/08.controle-de-pagamento.png)
+![Controle de Pagamentos](./wireframes/08-controle-de-pagamento.png)
 
 ## 6.6 Histórico de Movimentações
 
 Apresenta os registros anteriores de estacionamento, permitindo consultar as movimentações realizadas.
 
-![Histórico de Movimentações](./wireframes/09.histórico-de-movimentação.png)
+![Histórico de Movimentações](./wireframes/09-historico-de-movimentacao.png)
 
-## 6.7 Integrantes
+## 7. Tela integrantes
 
 Apresenta os integrantes da equipe responsáveis pelo desenvolvimento do aplicativo.
 
-![Integrantes](./wireframes/10.lista-integrantes.png)
+![Integrantes](./wireframes/10-lista-integrantes.png)
 
 ## 8. Geração do arquivo APK
 
