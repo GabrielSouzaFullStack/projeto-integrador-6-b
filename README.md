@@ -33,6 +33,7 @@ Empresas de estacionamento privativo que não possuem capital suficiente para in
 - **Registro de Entrada e Saída:** Controla a movimentação dos veículos no estacionamento, registrando horários de entrada e saída.
 - **Controle de Pagamentos:** Realiza o registro e a consulta dos valores referentes aos serviços de estacionamento.
 - **Histórico de Movimentações:** Disponibiliza a consulta dos registros de estacionamento realizados, permitindo o acompanhamento das movimentações anteriores.
+- **Integrantes:** Lista o nome de todos integrantes da equipe, responsáveis pela criação do applicativo.
 
 ## 5. Modelo Entidade-Relacionamento (ER) do Banco de Dados Local
 
@@ -46,7 +47,57 @@ Para mais dúvidas técnicas acesse: [Saiba mais](./docs/docs-modelo-er.md)
 
 ![Diagrama ER](./images/diagrama-er.png)
 
----
+## 6. Interface do Aplicativo
+
+Esta seção apresenta as principais telas desenvolvidas para o aplicativo ParkPag, demonstrando sua interface e a disposição das funcionalidades disponíveis ao usuário.
+
+As telas foram organizadas de acordo com os módulos do sistema, contemplando o acesso inicial, gerenciamento de clientes e veículos, registro de entradas e saídas, controle de pagamentos e histórico de movimentações.
+
+## 6.1 Tela Inicial e Menu Principal
+
+Apresenta a tela de abertura do aplicativo e o menu de navegação para acesso às principais funcionalidades.
+
+![Tela Inicial](./wireframes/01-tela-inicial.png)
+![Menu Principal](./wireframes/02-menu-principal.png)
+
+## 6.2 Gerenciamento de Clientes
+
+Apresenta as telas de listagem, cadastro e visualização dos detalhes dos clientes cadastrados.
+
+![Lista de Clientes](./wireframes/03-lista-de-clientes.png)
+![Cadastro de Clientes](./wireframes/04-cadastro-de-clientes.png)
+![Detalhes do Cliente](./wireframes/05-detalhes-do-cliente.png)
+
+## 6.3 Gerenciamento de Veículos
+
+Demonstra o cadastro e a consulta dos veículos vinculados aos respectivos clientes.
+
+![Gerenciamento de Veículos](./wireframes/06-gerenciamento-de-veiculos.png)
+
+## 6.4 Gerenciamento de Veículos
+
+Apresenta as telas responsáveis pelo registro manual dos horários de entrada e saída dos veículos.
+
+![Registro de Entrada e Saída](./wireframes/07-registro-de-entrada-e-saida.png)
+
+## 6.5 Controle de Pagamentos
+
+Demonstra a apresentação do tempo de permanência e o cálculo automático do valor a ser pago pelo estacionamento.
+
+![Controle de Pagamentos](./wireframes/08-controle-de-pagamento.png)
+
+## 6.6 Histórico de Movimentações
+
+Apresenta os registros anteriores de estacionamento, permitindo consultar as movimentações realizadas.
+
+![Histórico de Movimentações](./wireframes/09-historico-de-movimentacao.png)
+
+## 7. Tela integrantes
+
+Apresenta os integrantes da equipe responsáveis pelo desenvolvimento do aplicativo.
+
+![Integrantes](./wireframes/10-lista-integrantes.png)
+
 ## 8. Geração do arquivo APK
 
 O APK do ParkPag será gerado com o Capacitor, que transforma o aplicativo Ionic/Angular em um projeto Android nativo. Esse projeto é compilado pelo Gradle, pelo Android Studio ou pela linha de comando, gerando o arquivo `.apk` que pode ser instalado diretamente no celular.
