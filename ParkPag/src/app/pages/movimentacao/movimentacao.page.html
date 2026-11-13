@@ -1,0 +1,130 @@
+<app-cabecalho [titulo]="titulo()"></app-cabecalho>
+
+<ion-content class="ion-padding pp-form">
+  @if (!carregando()) {
+    @if (modo() === 'saida') {
+      <!-- ===== Saída: escolhe um veículo que está no pátio ===== -->
+      @if (abertas().length === 0) {
+        <div class="pp-card pp-vazio">Nenhum veículo no pátio no momento.</div>
+      } @else {
+        <ion-select
+          label="Veículo" labelPlacement="stacked" fill="outline" interface="action-sheet"
+          cancelText="Cancelar" [value]="idEstadia()" (ionChange)="idEstadia.set($event.detail.value)"
+        >
+          @for (e of abertas(); track e.id_estadia) {
+            <ion-select-option [value]="e.id_estadia">{{ e.placa | placa }} – {{ e.nome_cliente }}</ion-select-option>
+          }
+        </ion-select>
+
+        @if (estadiaSelecionada(); as e) {
+          <div class="pp-card">
+            <h2>Entrada</h2>
+            <div class="pp-linha">
+              <span class="pp-rotulo">Data e horário</span>
+              <span class="pp-valor">{{ e.data_hora_entrada | dataBr }} · {{ e.data_hora_entrada | dataBr: 'hora' }}</span>
+            </div>
+            <div class="pp-linha">
+              <span class="pp-rotulo">Tarifa</span>
+              <span class="pp-valor">{{ e.descricao_tarifa }} ({{ e.valor_hora | moeda }}/h)</span>
+            </div>
+          </div>
+        }
+      }
+    } @else {
+      <!-- ===== Entrada: escolhe um veículo fora do pátio ===== -->
+      @if (veiculos().length === 0) {
+        <div class="pp-card pp-vazio">
+          Nenhum veículo disponível. Cadastre um veículo ou registre a saída dos que estão no pátio.
+          <ion-button class="pp-botao" color="secondary" expand="block" routerLink="/veiculos">
+            Cadastrar veículo
+          </ion-button>
+        </div>
+      } @else {
+        <ion-select
+          label="Veículo" labelPlacement="stacked" fill="outline" placeholder="Selecione o veículo"
+          interface="action-sheet" cancelText="Cancelar"
+          [value]="idVeiculo()" (ionChange)="idVeiculo.set($event.detail.value)"
+        >
+          @for (v of veiculos(); track v.id_veiculo) {
+            <ion-select-option [value]="v.id_veiculo">{{ v.placa | placa }} – {{ v.nome_cliente }}</ion-select-option>
+          }
+        </ion-select>
+
+        @if (tarifas().length > 1) {
+          <ion-select
+            label="Tarifa" labelPlacement="stacked" fill="outline" interface="action-sheet"
+            cancelText="Cancelar" [value]="idTarifa()" (ionChange)="idTarifa.set($event.detail.value)"
+          >
+            @for (t of tarifas(); track t.id_tarifa) {
+              <ion-select-option [value]="t.id_tarifa">{{ t.descricao }} ({{ t.valor_hora | moeda }}/h)</ion-select-option>
+            }
+          </ion-select>
+        }
+
+        <div class="pp-card">
+          <h2>Entrada</h2>
+          <div class="pp-grade">
+            <ion-input
+              label="Data" labelPlacement="stacked" fill="outline" type="date"
+              [value]="datas().dataEntrada" (ionInput)="alterarData('dataEntrada', $event)"
+            ></ion-input>
+            <ion-input
+              label="Horário" labelPlacement="stacked" fill="outline" type="time"
+              [value]="datas().horaEntrada" (ionInput)="alterarData('horaEntrada', $event)"
+            ></ion-input>
+          </div>
+        </div>
+
+        <ion-item lines="none" class="pp-card">
+          <ion-toggle [checked]="informarSaida()" (ionChange)="informarSaida.set($event.detail.checked)">
+            Informar também a saída
+          </ion-toggle>
+        </ion-item>
+      }
+    }
+
+    @if (temSaida() && (modo() === 'saida' ? abertas().length > 0 : veiculos().length > 0)) {
+      <div class="pp-card">
+        <h2>Saída</h2>
+        <div class="pp-grade">
+          <ion-input
+            label="Data" labelPlacement="stacked" fill="outline" type="date"
+            [value]="datas().dataSaida" (ionInput)="alterarData('dataSaida', $event)"
+          ></ion-input>
+          <ion-input
+            label="Horário" labelPlacement="stacked" fill="outline" type="time"
+            [value]="datas().horaSaida" (ionInput)="alterarData('horaSaida', $event)"
+          ></ion-input>
+        </div>
+      </div>
+    }
+
+    <p class="pp-sub">Informe as datas e os horários manualmente.</p>
+    @if (erroDatas()) {
+      <div class="pp-erro">{{ erroDatas() }}</div>
+    }
+
+    @if (cobranca(); as c) {
+      <div class="pp-destaque pp-linha">
+        <div>
+          <div class="pp-rotulo">Tempo de permanência</div>
+          <div class="pp-medio">{{ c.minutos | duracao }}</div>
+        </div>
+        <div>
+          <div class="pp-rotulo">Valor ({{ tarifaAtual()!.valor_hora | moeda }}/h)</div>
+          <div class="pp-medio pp-amarelo">{{ c.valor | moeda }}</div>
+        </div>
+      </div>
+    }
+  }
+</ion-content>
+
+<ion-footer class="ion-no-border pp-rodape">
+  <ion-button
+    class="pp-botao" color="secondary" expand="block"
+    [disabled]="salvando() || carregando() || !!erroDatas() || (modo() === 'saida' ? !idEstadia() : !idVeiculo())"
+    (click)="registrar()"
+  >
+    {{ titulo() }}
+  </ion-button>
+</ion-footer>
