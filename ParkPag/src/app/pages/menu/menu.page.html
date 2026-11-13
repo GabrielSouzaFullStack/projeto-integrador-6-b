@@ -1,0 +1,16 @@
+<app-cabecalho titulo="Menu principal" voltarPara="/inicio"></app-cabecalho>
+
+<ion-content class="ion-padding">
+  @for (item of itens; track item.rota) {
+    <a class="pp-card pp-clicavel pp-item-icone" [routerLink]="item.rota">
+      <div class="pp-icone" [ngClass]="item.estilo">
+        <ion-icon [name]="item.icone"></ion-icon>
+      </div>
+      <div class="pp-item-texto">
+        <div class="pp-titulo">{{ item.titulo }}</div>
+        <div class="pp-sub">{{ item.descricao }}</div>
+      </div>
+      <ion-icon name="chevron-forward"></ion-icon>
+    </a>
+  }
+</ion-content>
