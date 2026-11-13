@@ -1,0 +1,94 @@
+<app-cabecalho titulo="Detalhes do cliente" voltarPara="/clientes">
+  @if (cliente(); as c) {
+    <ion-buttons slot="end">
+      <ion-button [routerLink]="['/clientes', c.id_cliente, 'editar']" aria-label="Editar cliente">
+        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="excluir()" aria-label="Excluir cliente">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  }
+</app-cabecalho>
+
+<ion-content class="ion-padding">
+  @if (cliente(); as c) {
+    <div class="pp-card">
+      <h2>{{ c.nome }}</h2>
+      <div class="pp-linha"><span class="pp-rotulo">CPF</span><span class="pp-valor">{{ c.cpf | cpf }}</span></div>
+      @if (c.telefone) {
+        <div class="pp-linha"><span class="pp-rotulo">Telefone</span><span class="pp-valor">{{ c.telefone | telefone }}</span></div>
+      }
+      @if (c.email) {
+        <div class="pp-linha"><span class="pp-rotulo">E-mail</span><span class="pp-valor">{{ c.email }}</span></div>
+      }
+      <div class="pp-linha"><span class="pp-rotulo">Cliente desde</span><span class="pp-valor">{{ c.data_cadastro | dataBr }}</span></div>
+      <div class="pp-linha"><span class="pp-rotulo">Veículos cadastrados</span><span class="pp-valor">{{ veiculos().length }}</span></div>
+      <div class="pp-linha"><span class="pp-rotulo">Estadias registradas</span><span class="pp-valor">{{ estadias().length }}</span></div>
+      <div class="pp-linha">
+        <span class="pp-rotulo">Estadia em aberto</span>
+        <span class="pp-valor">
+          {{ estadiasAbertas().length }}@if (estadiasAbertas().length) { ({{ placasAbertas() }})}
+        </span>
+      </div>
+      <div class="pp-linha"><span class="pp-rotulo">Tempo total de permanência</span><span class="pp-valor">{{ tempoTotal() | duracao }}</span></div>
+      <div class="pp-linha"><span class="pp-rotulo">Total pago</span><span class="pp-valor">{{ totalPago() | moeda }}</span></div>
+      @if (c.logradouro || c.cidade) {
+        <div class="pp-divisor"></div>
+        <div class="pp-sub">
+          {{ c.logradouro }}{{ c.numero ? ', ' + c.numero : '' }}{{ c.complemento ? ' – ' + c.complemento : '' }}
+          {{ c.bairro ? ' · ' + c.bairro : '' }}{{ c.cidade ? ' · ' + c.cidade : '' }}{{ c.uf ? '/' + c.uf : '' }}
+        </div>
+      }
+    </div>
+
+    <div class="pp-secao">Veículos vinculados</div>
+    @for (v of veiculos(); track v.id_veiculo) {
+      <div class="pp-card pp-linha">
+        <div>
+          <div class="pp-titulo">{{ v.placa | placa }}</div>
+          <div class="pp-sub">Marca: {{ v.marca }} · Modelo: {{ v.modelo }}</div>
+        </div>
+        <div class="pp-valor">{{ v.no_patio ? 'No pátio' : 'Fora do pátio' }}</div>
+      </div>
+    } @empty {
+      <div class="pp-vazio">Nenhum veículo vinculado.</div>
+    }
+
+    <div class="pp-secao">Estadias</div>
+    @for (e of estadias(); track e.id_estadia) {
+      <div class="pp-card pp-clicavel pp-linha" (click)="abrirEstadia(e)">
+        <div>
+          <div class="pp-titulo">{{ e.placa | placa }}</div>
+          <div class="pp-sub">
+            {{ e.data_hora_entrada | dataBr: 'curta' }} · {{ e.data_hora_entrada | dataBr: 'hora' }} –
+            @if (e.data_hora_saida) {
+              {{ e.data_hora_saida | dataBr: 'hora' }} · {{ e.tempo_permanencia | duracao }}
+            } @else {
+              em aberto
+            }
+          </div>
+        </div>
+        <div>
+          <div class="pp-valor">{{ e.data_hora_saida ? (e.valor_total | moeda) : '—' }}</div>
+          @if (e.data_hora_saida) {
+            <div class="pp-sub">{{ e.status_pagamento === 'PAGO' ? 'Pago' : 'Pendente' }}</div>
+          }
+        </div>
+      </div>
+    } @empty {
+      <div class="pp-vazio">Nenhuma estadia registrada.</div>
+    }
+  }
+</ion-content>
+
+@if (cliente(); as c) {
+  <ion-footer class="ion-no-border pp-rodape">
+    <ion-button
+      class="pp-botao" color="secondary" expand="block"
+      routerLink="/veiculos" [queryParams]="{ cliente: c.id_cliente }"
+    >
+      Adicionar veículo
+    </ion-button>
+  </ion-footer>
+}
