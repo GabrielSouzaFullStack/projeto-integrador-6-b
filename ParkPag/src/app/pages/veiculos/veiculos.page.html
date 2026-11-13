@@ -1,0 +1,86 @@
+<app-cabecalho titulo="Gerenciamento de veículos"></app-cabecalho>
+
+<ion-content class="ion-padding">
+  @if (!carregando() && clientes().length === 0) {
+    <div class="pp-card pp-vazio">
+      Cadastre um cliente antes de cadastrar veículos.
+      <ion-button class="pp-botao" color="secondary" expand="block" routerLink="/clientes/novo">
+        Novo cliente
+      </ion-button>
+    </div>
+  } @else {
+    <form class="pp-card pp-form" (submit)="$event.preventDefault(); salvar()">
+      <h2>Cadastrar veículo</h2>
+      <div class="pp-grade">
+        <div>
+          <ion-input
+            label="Placa *" labelPlacement="stacked" fill="outline" placeholder="AAA-0A00"
+            autocapitalize="characters" [maxlength]="8"
+            [value]="form().placa" (ionInput)="alterar('placa', $event)"
+          ></ion-input>
+          @if (erros().placa) { <div class="pp-erro">{{ erros().placa }}</div> }
+        </div>
+        <div>
+          <ion-input
+            label="Marca *" labelPlacement="stacked" fill="outline" placeholder="Ex.: Honda"
+            autocapitalize="words" [value]="form().marca" (ionInput)="alterar('marca', $event)"
+          ></ion-input>
+          @if (erros().marca) { <div class="pp-erro">{{ erros().marca }}</div> }
+        </div>
+        <div>
+          <ion-input
+            label="Modelo *" labelPlacement="stacked" fill="outline" placeholder="Ex.: Civic"
+            autocapitalize="words" [value]="form().modelo" (ionInput)="alterar('modelo', $event)"
+          ></ion-input>
+          @if (erros().modelo) { <div class="pp-erro">{{ erros().modelo }}</div> }
+        </div>
+        <ion-input
+          label="Cor" labelPlacement="stacked" fill="outline" placeholder="Ex.: Prata"
+          autocapitalize="words" [value]="form().cor" (ionInput)="alterar('cor', $event)"
+        ></ion-input>
+      </div>
+
+      <ion-select
+        label="Cliente vinculado *" labelPlacement="stacked" fill="outline" placeholder="Selecione"
+        interface="action-sheet" cancelText="Cancelar"
+        [value]="form().idCliente" (ionChange)="selecionarCliente($event.detail.value)"
+      >
+        @for (c of clientes(); track c.id_cliente) {
+          <ion-select-option [value]="c.id_cliente">{{ c.nome }}</ion-select-option>
+        }
+      </ion-select>
+      @if (erros().idCliente) { <div class="pp-erro">{{ erros().idCliente }}</div> }
+
+      <ion-button class="pp-botao" color="secondary" expand="block" type="submit" [disabled]="salvando()">
+        Salvar veículo
+      </ion-button>
+    </form>
+  }
+
+  <div class="pp-secao">Veículos cadastrados</div>
+  <ion-searchbar
+    placeholder="Buscar por placa ou cliente"
+    [debounce]="250"
+    [value]="busca()"
+    (ionInput)="buscar($event.detail.value)"
+  ></ion-searchbar>
+
+  @for (v of veiculos(); track v.id_veiculo) {
+    <div class="pp-card pp-clicavel pp-linha" (click)="opcoes(v)">
+      <div>
+        <div class="pp-titulo">{{ v.placa | placa }}</div>
+        <div class="pp-sub">{{ v.marca }} {{ v.modelo }}{{ v.no_patio ? ' · No pátio' : '' }}</div>
+      </div>
+      <div>
+        <div class="pp-titulo">{{ v.nome_cliente }}</div>
+        <div class="pp-sub">{{ v.telefone_cliente | telefone }}</div>
+      </div>
+    </div>
+  } @empty {
+    @if (!carregando()) {
+      <div class="pp-vazio">
+        {{ busca() ? 'Nenhum veículo encontrado para a busca.' : 'Nenhum veículo cadastrado ainda.' }}
+      </div>
+    }
+  }
+</ion-content>
