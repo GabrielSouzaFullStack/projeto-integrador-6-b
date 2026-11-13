@@ -1,0 +1,243 @@
+/* ---------------------------------------------------------------------------
+ * Componentes visuais do ParkPag (prefixo pp-), baseados nos wireframes.
+ * ------------------------------------------------------------------------ */
+
+.pp-toolbar {
+  --min-height: 64px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+
+  ion-title {
+    font-weight: 700;
+    font-size: 1.2rem;
+  }
+
+  ion-back-button {
+    --background: rgba(255, 255, 255, 0.12);
+    --border-radius: 12px;
+    --icon-font-size: 20px;
+    width: 44px;
+    height: 44px;
+  }
+}
+
+.pp-card {
+  background: #ffffff;
+  border: 1px solid var(--pp-borda);
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  display: block;
+  color: var(--ion-color-primary);
+  text-decoration: none;
+
+  &.pp-clicavel {
+    cursor: pointer;
+
+    &:active {
+      background: #eef2f7;
+    }
+  }
+
+  h2 {
+    margin: 0 0 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+}
+
+.pp-linha {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+
+  & + & {
+    margin-top: 6px;
+  }
+
+  > :last-child:not(:first-child) {
+    text-align: right;
+  }
+}
+
+.pp-titulo {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.pp-sub {
+  color: var(--pp-texto-suave);
+  font-size: 0.85rem;
+}
+
+.pp-rotulo {
+  color: var(--pp-texto-suave);
+}
+
+.pp-valor {
+  font-weight: 700;
+}
+
+.pp-secao {
+  color: var(--pp-texto-suave);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 18px 4px 8px;
+}
+
+.pp-vazio {
+  text-align: center;
+  color: var(--pp-texto-suave);
+  padding: 24px 12px;
+}
+
+.pp-divisor {
+  border-top: 1px solid var(--pp-borda);
+  margin: 10px 0;
+}
+
+/* Card escuro com valor em destaque (registro, pagamento) */
+.pp-destaque {
+  background: var(--ion-color-primary);
+  color: #ffffff;
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+
+  .pp-rotulo {
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.85rem;
+  }
+
+  .pp-grande {
+    color: var(--ion-color-secondary);
+    font-size: 2.2rem;
+    font-weight: 800;
+  }
+
+  .pp-medio {
+    font-size: 1.3rem;
+    font-weight: 800;
+  }
+
+  .pp-amarelo {
+    color: var(--ion-color-secondary);
+  }
+}
+
+.pp-badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: var(--ion-color-secondary);
+  color: var(--ion-color-primary);
+
+  &.pp-badge-pago {
+    background: #2fb36b;
+    color: #ffffff;
+  }
+}
+
+/* Formulários */
+.pp-grade {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 10px;
+}
+
+.pp-form ion-input,
+.pp-form ion-select {
+  --background: #ffffff;
+  --border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+.pp-erro {
+  color: var(--ion-color-danger);
+  font-size: 0.8rem;
+  margin: -6px 4px 8px;
+}
+
+/* Botões */
+.pp-botao {
+  --border-radius: 14px;
+  height: 52px;
+  font-weight: 700;
+  text-transform: none;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.pp-rodape {
+  padding: 12px 16px calc(12px + var(--ion-safe-area-bottom, 0px));
+  background: var(--ion-background-color);
+}
+
+/* Botões de opção lado a lado (forma e situação do pagamento) */
+.pp-opcoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+
+  button {
+    height: 48px;
+    border-radius: 12px;
+    border: 1px solid var(--pp-borda);
+    background: #ffffff;
+    color: var(--pp-texto-suave);
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    &.pp-ativo {
+      border: 2px solid var(--ion-color-primary);
+      color: var(--ion-color-primary);
+    }
+  }
+}
+
+/* Ícone quadrado colorido (menu, integrantes) */
+.pp-icone {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: var(--ion-color-tertiary);
+
+  &.pp-icone-azul {
+    background: var(--ion-color-primary);
+    color: var(--ion-color-secondary);
+  }
+
+  &.pp-icone-amarelo {
+    background: var(--ion-color-secondary);
+    color: var(--ion-color-primary);
+  }
+}
+
+.pp-item-icone {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  .pp-item-texto {
+    flex: 1;
+  }
+
+  > ion-icon:last-child {
+    color: var(--pp-texto-suave);
+  }
+}

@@ -1,2 +1,38 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+// Cores do ParkPag, extraídas dos wireframes.
+// Referência: https://ionicframework.com/docs/theming/colors
+
+:root {
+  // Azul-marinho: cabeçalhos, cards de destaque
+  --ion-color-primary: #0f2a44;
+  --ion-color-primary-rgb: 15, 42, 68;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #0d253c;
+  --ion-color-primary-tint: #273f57;
+
+  // Amarelo: botões de ação principal
+  --ion-color-secondary: #ffc83d;
+  --ion-color-secondary-rgb: 255, 200, 61;
+  --ion-color-secondary-contrast: #0f2a44;
+  --ion-color-secondary-contrast-rgb: 15, 42, 68;
+  --ion-color-secondary-shade: #e0b036;
+  --ion-color-secondary-tint: #ffce50;
+
+  // Verde-petróleo: ícones do menu e avatares
+  --ion-color-tertiary: #1e8a8a;
+  --ion-color-tertiary-rgb: 30, 138, 138;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #1a7979;
+  --ion-color-tertiary-tint: #359696;
+
+  --ion-background-color: #f4f6fa;
+  --ion-background-color-rgb: 244, 246, 250;
+  --ion-text-color: #0f2a44;
+  --ion-text-color-rgb: 15, 42, 68;
+
+  // Tokens próprios do app
+  --pp-borda: #e3e8ef;
+  --pp-texto-suave: #6b7785;
+  --pp-laranja: #f2814a;
+}
