@@ -1,0 +1,110 @@
+<app-cabecalho titulo="Pagamento" voltarPara="/historico"></app-cabecalho>
+
+<ion-content class="ion-padding">
+  @if (estadia(); as e) {
+    <div class="pp-destaque">
+      <div class="pp-rotulo">Valor total</div>
+      <div class="pp-linha">
+        <span class="pp-grande">{{ e.data_hora_saida ? (e.valor_total | moeda) : '—' }}</span>
+        <span class="pp-badge" [class.pp-badge-pago]="pago()">
+          {{ !e.data_hora_saida ? 'No pátio' : pago() ? 'Pago' : 'Pendente' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="pp-card">
+      <div class="pp-linha"><span class="pp-rotulo">Veículo</span><span class="pp-valor">{{ e.placa | placa }}</span></div>
+      <div class="pp-linha">
+        <span class="pp-rotulo">Cliente</span>
+        <a class="pp-valor" [routerLink]="['/clientes', e.id_cliente]">{{ e.nome_cliente }}</a>
+      </div>
+      <div class="pp-linha">
+        <span class="pp-rotulo">Permanência</span>
+        <span class="pp-valor">{{ e.data_hora_saida ? (e.tempo_permanencia | duracao) : 'em aberto' }}</span>
+      </div>
+    </div>
+
+    <div class="pp-card">
+      <div class="pp-titulo">Detalhes da permanência</div>
+      <div class="pp-linha">
+        <span class="pp-rotulo">Entrada</span>
+        <span class="pp-valor">{{ e.data_hora_entrada | dataBr: 'curta' }} · {{ e.data_hora_entrada | dataBr: 'hora' }}</span>
+      </div>
+      <div class="pp-linha">
+        <span class="pp-rotulo">Saída</span>
+        <span class="pp-valor">
+          @if (e.data_hora_saida) {
+            {{ e.data_hora_saida | dataBr: 'curta' }} · {{ e.data_hora_saida | dataBr: 'hora' }}
+          } @else {
+            —
+          }
+        </span>
+      </div>
+      @if (e.data_hora_saida) {
+        <div class="pp-divisor"></div>
+        <div class="pp-linha">
+          <span class="pp-rotulo">
+            @if (calculoPorHora()) {
+              {{ horasCobradas() }} h × {{ e.valor_hora | moeda }}
+            } @else {
+              {{ e.descricao_tarifa }} (diária {{ e.valor_diaria | moeda }})
+            }
+          </span>
+          <span class="pp-valor">{{ e.valor_total | moeda }}</span>
+        </div>
+      }
+    </div>
+
+    @if (!e.data_hora_saida) {
+      <div class="pp-vazio">Registre a saída do veículo para calcular o valor e receber o pagamento.</div>
+    } @else if (pago()) {
+      <div class="pp-card">
+        <div class="pp-linha">
+          <span class="pp-rotulo">Forma de pagamento</span>
+          <span class="pp-valor">{{ e.forma_pagamento === 'PIX' ? 'Pix' : 'Cartão' }}</span>
+        </div>
+        <div class="pp-linha">
+          <span class="pp-rotulo">Pago em</span>
+          <span class="pp-valor">{{ e.data_hora_pagamento | dataBr }} · {{ e.data_hora_pagamento | dataBr: 'hora' }}</span>
+        </div>
+      </div>
+    } @else {
+      <div class="pp-titulo">Forma de pagamento</div>
+      <div class="pp-opcoes">
+        <button type="button" [class.pp-ativo]="forma() === 'PIX'" (click)="forma.set('PIX')">
+          <ion-icon name="diamond-outline"></ion-icon> Pix
+        </button>
+        <button type="button" [class.pp-ativo]="forma() === 'CARTAO'" (click)="forma.set('CARTAO')">
+          <ion-icon name="card-outline"></ion-icon> Cartão
+        </button>
+      </div>
+
+      <div class="pp-titulo">Situação do pagamento</div>
+      <div class="pp-opcoes">
+        <button type="button" [class.pp-ativo]="situacao() === 'PENDENTE'" (click)="situacao.set('PENDENTE')">
+          Pendente
+        </button>
+        <button type="button" [class.pp-ativo]="situacao() === 'PAGO'" (click)="situacao.set('PAGO')">
+          Pago
+        </button>
+      </div>
+      <p class="pp-sub">Marque como "Pago" para liberar a confirmação.</p>
+    }
+  }
+</ion-content>
+
+@if (estadia(); as e) {
+  @if (!e.data_hora_saida) {
+    <ion-footer class="ion-no-border pp-rodape">
+      <ion-button class="pp-botao" color="secondary" expand="block" (click)="registrarSaida()">
+        Registrar saída
+      </ion-button>
+    </ion-footer>
+  } @else if (!pago()) {
+    <ion-footer class="ion-no-border pp-rodape">
+      <ion-button class="pp-botao" color="secondary" expand="block" [disabled]="!podeConfirmar()" (click)="confirmar()">
+        Confirmar pagamento
+      </ion-button>
+    </ion-footer>
+  }
+}
