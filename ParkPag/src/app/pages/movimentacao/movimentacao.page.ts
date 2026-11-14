@@ -15,7 +15,7 @@ import {
   extrairHora,
 } from '../../core/utils/formatadores';
 
-type Modo = 'entrada' | 'saida';
+type Modo = 'entrada' | 'saida' | 'editar';
 type CampoData = 'dataEntrada' | 'horaEntrada' | 'dataSaida' | 'horaSaida';
 
 /**
@@ -24,6 +24,8 @@ type CampoData = 'dataEntrada' | 'horaEntrada' | 'dataSaida' | 'horaSaida';
  * - /movimentacao/entrada: abre uma estadia; opcionalmente já informa a
  *   saída (lançamento retroativo).
  * - /movimentacao/saida: fecha uma estadia aberta e calcula o valor.
+ * - /movimentacao/editar?estadia=ID: corrige tarifa, entrada e saída de uma
+ *   estadia ainda não paga (recalcula o valor) ou a exclui.
  */
 @Component({
   selector: 'app-movimentacao',
@@ -46,6 +48,8 @@ export class MovimentacaoPage {
   readonly veiculos = signal<VeiculoDetalhado[]>([]);
   readonly abertas = signal<EstadiaDetalhada[]>([]);
   readonly tarifas = signal<Tarifa[]>([]);
+  /** Estadia carregada no modo "editar". */
+  readonly emEdicao = signal<EstadiaDetalhada | null>(null);
 
   // Formulário
   readonly idVeiculo = signal<number | null>(null);
@@ -74,7 +78,10 @@ export class MovimentacaoPage {
     return d.dataEntrada && d.horaEntrada ? combinarDataHora(d.dataEntrada, d.horaEntrada) : null;
   });
 
-  readonly temSaida = computed(() => this.modo() === 'saida' || this.informarSaida());
+  readonly temSaida = computed(() => {
+    if (this.modo() === 'editar') return !!this.emEdicao()?.data_hora_saida;
+    return this.modo() === 'saida' || this.informarSaida();
+  });
 
   readonly saidaIso = computed(() => {
     if (!this.temSaida()) return null;
@@ -87,7 +94,7 @@ export class MovimentacaoPage {
     const entrada = this.entradaIso();
     const saida = this.saidaIso();
     const agora = agoraIsoLocal();
-    if (entrada && this.modo() === 'entrada' && entrada > agora) {
+    if (entrada && this.modo() !== 'saida' && entrada > agora) {
       return 'A entrada não pode estar no futuro.';
     }
     if (saida && saida > agora) return 'A saída não pode estar no futuro.';
@@ -108,14 +115,31 @@ export class MovimentacaoPage {
     }
   });
 
+  /** Há um veículo/estadia disponível para mostrar os campos de data. */
+  readonly podeInformarDatas = computed(() => {
+    if (this.modo() === 'saida') return this.abertas().length > 0;
+    if (this.modo() === 'editar') return !!this.emEdicao();
+    return this.veiculos().length > 0;
+  });
+
+  /** O botão principal só é habilitado com um veículo/estadia selecionado. */
+  readonly selecaoValida = computed(() => {
+    if (this.modo() === 'saida') return !!this.idEstadia();
+    if (this.modo() === 'editar') return !!this.emEdicao() && !!this.idTarifa();
+    return !!this.idVeiculo();
+  });
+
   readonly titulo = computed(() => {
     if (this.modo() === 'saida') return 'Registrar saída';
+    if (this.modo() === 'editar') return 'Editar estadia';
     return this.informarSaida() ? 'Registrar entrada e saída' : 'Registrar entrada';
   });
 
   ionViewWillEnter(): void {
-    const modo = this.rota.snapshot.paramMap.get('modo') === 'saida' ? 'saida' : 'entrada';
+    const param = this.rota.snapshot.paramMap.get('modo');
+    const modo: Modo = param === 'saida' || param === 'editar' ? param : 'entrada';
     this.modo.set(modo);
+    this.emEdicao.set(null);
 
     const agora = agoraIsoLocal();
     this.datas.set({
@@ -142,6 +166,8 @@ export class MovimentacaoPage {
     try {
       if (this.modo() === 'saida') {
         await this.registrarSaida();
+      } else if (this.modo() === 'editar') {
+        await this.salvarEdicao();
       } else if (this.informarSaida()) {
         await this.registrarCompleta();
       } else {
@@ -193,10 +219,82 @@ export class MovimentacaoPage {
     await this.router.navigate(['/pagamento', idEstadia], { replaceUrl: true });
   }
 
+  private async salvarEdicao(): Promise<void> {
+    const estadia = this.emEdicao();
+    const tarifa = this.tarifas().find((t) => t.id_tarifa === this.idTarifa());
+    const entrada = this.entradaIso();
+    const saida = this.saidaIso();
+    if (!estadia || !tarifa || !entrada || (this.temSaida() && !saida)) {
+      await this.feedback.aviso('Informe a tarifa e as datas e horários da estadia.');
+      return;
+    }
+    await this.estadiasRepo.atualizar(estadia.id_estadia!, tarifa, entrada, saida);
+    await this.feedback.sucesso('Estadia atualizada.');
+    await this.voltarDaEdicao(estadia);
+  }
+
+  /** Exclui a estadia em edição (lançamento feito por engano). */
+  async excluir(): Promise<void> {
+    const estadia = this.emEdicao();
+    if (!estadia) return;
+    const confirmado = await this.feedback.confirmar(
+      'Excluir estadia',
+      'Deseja excluir esta estadia? Esta ação não pode ser desfeita.',
+      'Excluir',
+    );
+    if (!confirmado) return;
+    try {
+      await this.estadiasRepo.excluir(estadia.id_estadia!);
+      await this.feedback.sucesso('Estadia excluída.');
+      await this.router.navigate(['/historico'], { replaceUrl: true });
+    } catch (erro) {
+      await this.feedback.erro(erro);
+    }
+  }
+
+  /** Estadia fechada volta para o pagamento; aberta, para o histórico. */
+  private async voltarDaEdicao(estadia: EstadiaDetalhada): Promise<void> {
+    if (estadia.data_hora_saida) {
+      await this.router.navigate(['/pagamento', estadia.id_estadia], { replaceUrl: true });
+    } else {
+      await this.router.navigate(['/historico'], { replaceUrl: true });
+    }
+  }
+
+  private async carregarEdicao(): Promise<void> {
+    const id = Number(this.rota.snapshot.queryParamMap.get('estadia'));
+    const [estadia, tarifas] = await Promise.all([
+      id ? this.estadiasRepo.obter(id) : Promise.resolve(null),
+      this.tarifasRepo.listar(),
+    ]);
+    if (!estadia) {
+      await this.feedback.aviso('Estadia não encontrada.');
+      await this.router.navigate(['/historico'], { replaceUrl: true });
+      return;
+    }
+    if (estadia.status_pagamento === 'PAGO') {
+      await this.feedback.aviso('Estadias com pagamento confirmado não podem ser alteradas.');
+      await this.voltarDaEdicao(estadia);
+      return;
+    }
+    this.emEdicao.set(estadia);
+    this.tarifas.set(tarifas);
+    this.idTarifa.set(estadia.id_tarifa);
+    const saida = estadia.data_hora_saida ?? agoraIsoLocal();
+    this.datas.set({
+      dataEntrada: extrairData(estadia.data_hora_entrada),
+      horaEntrada: extrairHora(estadia.data_hora_entrada),
+      dataSaida: extrairData(saida),
+      horaSaida: extrairHora(saida),
+    });
+  }
+
   private async carregar(): Promise<void> {
     this.carregando.set(true);
     try {
-      if (this.modo() === 'saida') {
+      if (this.modo() === 'editar') {
+        await this.carregarEdicao();
+      } else if (this.modo() === 'saida') {
         const abertas = await this.estadiasRepo.listarAbertas();
         this.abertas.set(abertas);
         const solicitada = Number(this.rota.snapshot.queryParamMap.get('estadia'));

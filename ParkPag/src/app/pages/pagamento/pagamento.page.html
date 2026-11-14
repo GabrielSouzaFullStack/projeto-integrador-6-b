@@ -1,4 +1,17 @@
-<app-cabecalho titulo="Pagamento" voltarPara="/historico"></app-cabecalho>
+<app-cabecalho titulo="Pagamento" voltarPara="/historico">
+  @if (estadia(); as e) {
+    @if (!pago()) {
+      <ion-buttons slot="end">
+        <ion-button
+          routerLink="/movimentacao/editar" [queryParams]="{ estadia: e.id_estadia }"
+          aria-label="Editar ou excluir estadia"
+        >
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    }
+  }
+</app-cabecalho>
 
 <ion-content class="ion-padding">
   @if (estadia(); as e) {
