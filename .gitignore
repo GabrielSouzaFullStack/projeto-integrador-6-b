@@ -69,3 +69,6 @@ $RECYCLE.BIN/
 plugins/android.json
 plugins/ios.json
 UserInterfaceState.xcuserstate
+
+# Ignora versões anteriores do app
+/apk/parkpag-v1.apk
