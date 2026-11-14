@@ -9,8 +9,8 @@
       </ion-button>
     </div>
   } @else {
-    <form class="pp-card pp-form" (submit)="$event.preventDefault(); salvar()">
-      <h2>Cadastrar veículo</h2>
+    <form #formulario class="pp-card pp-form" (submit)="$event.preventDefault(); salvar()">
+      <h2>{{ editando() ? 'Editar veículo' : 'Cadastrar veículo' }}</h2>
       <div class="pp-grade">
         <div>
           <ion-input
@@ -52,8 +52,13 @@
       @if (erros().idCliente) { <div class="pp-erro">{{ erros().idCliente }}</div> }
 
       <ion-button class="pp-botao" color="secondary" expand="block" type="submit" [disabled]="salvando()">
-        Salvar veículo
+        {{ editando() ? 'Salvar alterações' : 'Salvar veículo' }}
       </ion-button>
+      @if (editando()) {
+        <ion-button class="pp-botao" fill="outline" color="medium" expand="block" type="button" (click)="cancelarEdicao()">
+          Cancelar edição
+        </ion-button>
+      }
     </form>
   }
 

@@ -61,6 +61,22 @@ export class VeiculoRepository {
     return resultado.ultimoId;
   }
 
+  async atualizar(veiculo: Veiculo): Promise<void> {
+    await this.db.executar(
+      `UPDATE VEICULO
+          SET placa = ?, marca = ?, modelo = ?, cor = ?, id_cliente = ?
+        WHERE id_veiculo = ?`,
+      [
+        normalizarPlaca(veiculo.placa),
+        veiculo.marca.trim(),
+        veiculo.modelo.trim(),
+        veiculo.cor?.trim() || null,
+        veiculo.id_cliente,
+        veiculo.id_veiculo!,
+      ],
+    );
+  }
+
   /** Falha (FOREIGN KEY) se o veículo tiver estadias registradas. */
   async excluir(idVeiculo: number): Promise<void> {
     await this.db.executar('DELETE FROM VEICULO WHERE id_veiculo = ?', [idVeiculo]);

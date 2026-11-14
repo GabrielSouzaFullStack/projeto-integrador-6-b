@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ActionSheetController, NavController } from '@ionic/angular/lazy';
 import { ClienteResumo } from '../../core/models/cliente.model';
@@ -39,6 +39,9 @@ export class VeiculosPage {
   readonly erros = signal<Partial<Record<keyof FormVeiculo, string>>>({});
   readonly salvando = signal(false);
   readonly carregando = signal(true);
+  /** id do veículo em edição; null = cadastro de um novo. */
+  readonly editando = signal<number | null>(null);
+  private readonly formulario = viewChild<ElementRef<HTMLElement>>('formulario');
 
   ionViewWillEnter(): void {
     const idCliente = Number(this.rota.snapshot.queryParamMap.get('cliente'));
@@ -83,20 +86,27 @@ export class VeiculosPage {
 
     this.salvando.set(true);
     try {
-      await this.veiculosRepo.inserir({
+      const dados = {
         placa: f.placa,
         marca: f.marca,
         modelo: f.modelo,
         cor: f.cor,
         id_cliente: f.idCliente!,
-      });
+      };
+      const idEditando = this.editando();
+      if (idEditando) {
+        await this.veiculosRepo.atualizar({ ...dados, id_veiculo: idEditando });
+      } else {
+        await this.veiculosRepo.inserir(dados);
+      }
       // Limpa o formulário antes do aviso, para não apagar o que o usuário
       // começar a digitar enquanto o toast aparece. Mantém o cliente
       // selecionado para facilitar cadastrar vários veículos.
+      this.editando.set(null);
       this.form.set({ ...this.formVazio(), idCliente: f.idCliente });
       this.erros.set({});
       this.veiculos.set(await this.veiculosRepo.listar(this.busca()));
-      void this.feedback.sucesso('Veículo cadastrado.');
+      void this.feedback.sucesso(idEditando ? 'Veículo atualizado.' : 'Veículo cadastrado.');
     } catch (erro) {
       await this.feedback.erro(erro);
     } finally {
@@ -108,6 +118,13 @@ export class VeiculosPage {
     const folha = await this.acoes.create({
       header: `${formatarPlaca(veiculo.placa)} · ${veiculo.marca} ${veiculo.modelo}`,
       buttons: [
+        {
+          text: 'Editar veículo',
+          icon: 'create-outline',
+          handler: () => {
+            this.editar(veiculo);
+          },
+        },
         {
           text: 'Ver cliente',
           icon: 'person-outline',
@@ -129,6 +146,26 @@ export class VeiculosPage {
     await folha.present();
   }
 
+  /** Carrega o veículo no formulário do topo da tela para edição. */
+  editar(veiculo: VeiculoDetalhado): void {
+    this.editando.set(veiculo.id_veiculo!);
+    this.form.set({
+      placa: formatarPlaca(veiculo.placa),
+      marca: veiculo.marca,
+      modelo: veiculo.modelo,
+      cor: veiculo.cor ?? '',
+      idCliente: veiculo.id_cliente,
+    });
+    this.erros.set({});
+    this.formulario()?.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  cancelarEdicao(): void {
+    this.editando.set(null);
+    this.form.set(this.formVazio());
+    this.erros.set({});
+  }
+
   private async excluir(veiculo: VeiculoDetalhado): Promise<void> {
     const confirmado = await this.feedback.confirmar(
       'Excluir veículo',
@@ -138,6 +175,7 @@ export class VeiculosPage {
     if (!confirmado) return;
     try {
       await this.veiculosRepo.excluir(veiculo.id_veiculo!);
+      if (this.editando() === veiculo.id_veiculo) this.cancelarEdicao();
       await this.feedback.sucesso('Veículo excluído.');
       this.veiculos.set(await this.veiculosRepo.listar(this.busca()));
     } catch (erro) {
