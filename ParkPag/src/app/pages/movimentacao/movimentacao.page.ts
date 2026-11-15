@@ -93,7 +93,6 @@ export class MovimentacaoPage {
   readonly erroDatas = computed<string | null>(() => {
     const entrada = this.entradaIso();
     const saida = this.saidaIso();
-    const agora = agoraIsoLocal();
     if (entrada && saida && saida < entrada) return 'A saída deve ser igual ou posterior à entrada.';
     return null;
   });
