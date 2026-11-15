@@ -94,10 +94,6 @@ export class MovimentacaoPage {
     const entrada = this.entradaIso();
     const saida = this.saidaIso();
     const agora = agoraIsoLocal();
-    if (entrada && this.modo() !== 'saida' && entrada > agora) {
-      return 'A entrada não pode estar no futuro.';
-    }
-    if (saida && saida > agora) return 'A saída não pode estar no futuro.';
     if (entrada && saida && saida < entrada) return 'A saída deve ser igual ou posterior à entrada.';
     return null;
   });
