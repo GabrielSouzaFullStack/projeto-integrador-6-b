@@ -1,0 +1,13 @@
+<app-cabecalho titulo="Integrantes"></app-cabecalho>
+
+<ion-content class="ion-padding">
+  @for (nome of integrantes; track nome) {
+    <div class="pp-card pp-item-icone">
+      <div class="pp-icone">{{ inicial(nome) }}</div>
+      <div class="pp-item-texto">
+        <div class="pp-titulo">{{ nome }}</div>
+        <div class="pp-sub">Integrante da equipe</div>
+      </div>
+    </div>
+  }
+</ion-content>

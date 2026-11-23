@@ -1,0 +1,7 @@
+{
+  "name": "ParkPag",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

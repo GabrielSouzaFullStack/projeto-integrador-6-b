@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>ParkPag</title>
+  <rect width="64" height="64" rx="15" fill="#FFC83D"/>
+  <path d="M24 49V15h10.5a10.5 10.5 0 0 1 0 21H24" fill="none" stroke="#0F2A44" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

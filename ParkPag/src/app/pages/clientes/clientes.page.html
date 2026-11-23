@@ -1,0 +1,50 @@
+<app-cabecalho titulo="Clientes"></app-cabecalho>
+
+<ion-content class="ion-padding">
+  <ion-searchbar
+    placeholder="Nome, telefone ou CPF"
+    [debounce]="250"
+    [value]="busca()"
+    (ionInput)="buscar($event.detail.value)"
+  ></ion-searchbar>
+
+  @for (cliente of clientes(); track cliente.id_cliente) {
+    <a class="pp-card pp-clicavel pp-linha" [routerLink]="['/clientes', cliente.id_cliente]">
+      <div>
+        <div class="pp-titulo">{{ cliente.nome }}</div>
+        <div class="pp-sub">{{ cliente.telefone ? (cliente.telefone | telefone) : (cliente.cpf | cpf) }}</div>
+      </div>
+      <div class="pp-valor">
+        {{ cliente.total_veiculos }} {{ cliente.total_veiculos === 1 ? 'veículo' : 'veículos' }}
+      </div>
+    </a>
+  } @empty {
+    @if (!carregando()) {
+      <div class="pp-vazio">
+        {{ busca() ? 'Nenhum cliente encontrado para a busca.' : 'Nenhum cliente cadastrado ainda.' }}
+      </div>
+    }
+  }
+
+  <div class="pp-card">
+    <h2>Resumo da lista</h2>
+    <div class="pp-linha">
+      <span>Total de clientes</span>
+      <span class="pp-valor">{{ resumo().total_clientes }} <ion-icon name="person"></ion-icon></span>
+    </div>
+    <div class="pp-linha">
+      <span>Total de veículos</span>
+      <span class="pp-valor">{{ resumo().total_veiculos }} <ion-icon name="car"></ion-icon></span>
+    </div>
+    <div class="pp-linha">
+      <span>Novos clientes (mês)</span>
+      <span class="pp-valor">{{ resumo().novos_no_mes }} <ion-icon name="person-add"></ion-icon></span>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border pp-rodape">
+  <ion-button class="pp-botao" color="secondary" expand="block" routerLink="/clientes/novo">
+    Novo cliente
+  </ion-button>
+</ion-footer>

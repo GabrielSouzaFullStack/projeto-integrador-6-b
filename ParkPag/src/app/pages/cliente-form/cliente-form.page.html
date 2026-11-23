@@ -1,0 +1,95 @@
+<app-cabecalho
+  [titulo]="idCliente() ? 'Editar cliente' : 'Cadastro de clientes'"
+  voltarPara="/clientes"
+></app-cabecalho>
+
+<ion-content class="ion-padding">
+  <form class="pp-card pp-form" (submit)="$event.preventDefault(); salvar()">
+    <h2>{{ idCliente() ? 'Dados do cliente' : 'Novo cliente' }}</h2>
+
+    <ion-input
+      label="Nome *" labelPlacement="stacked" fill="outline"
+      placeholder="Nome completo" autocapitalize="words"
+      [value]="form().nome" (ionInput)="alterar('nome', $event)"
+    ></ion-input>
+    @if (erros().nome) { <div class="pp-erro">{{ erros().nome }}</div> }
+
+    <ion-input
+      label="Telefone" labelPlacement="stacked" fill="outline"
+      placeholder="(00) 00000-0000" inputmode="tel" [maxlength]="15"
+      [value]="form().telefone" (ionInput)="alterar('telefone', $event)"
+    ></ion-input>
+    @if (erros().telefone) { <div class="pp-erro">{{ erros().telefone }}</div> }
+
+    <div class="pp-grade">
+      <div>
+        <ion-input
+          label="CPF *" labelPlacement="stacked" fill="outline"
+          placeholder="000.000.000-00" inputmode="numeric" [maxlength]="14"
+          [value]="form().cpf" (ionInput)="alterar('cpf', $event)"
+        ></ion-input>
+        @if (erros().cpf) { <div class="pp-erro">{{ erros().cpf }}</div> }
+      </div>
+      <div>
+        <ion-input
+          label="Data de nascimento" labelPlacement="stacked" fill="outline"
+          placeholder="DD/MM/AAAA" inputmode="numeric" [maxlength]="10"
+          [value]="form().nascimento" (ionInput)="alterar('nascimento', $event)"
+        ></ion-input>
+        @if (erros().nascimento) { <div class="pp-erro">{{ erros().nascimento }}</div> }
+      </div>
+    </div>
+
+    <ion-input
+      label="E-mail" labelPlacement="stacked" fill="outline" type="email"
+      placeholder="exemplo@email.com" inputmode="email"
+      [value]="form().email" (ionInput)="alterar('email', $event)"
+    ></ion-input>
+    @if (erros().email) { <div class="pp-erro">{{ erros().email }}</div> }
+
+    <h2>Endereço completo</h2>
+    <div class="pp-grade">
+      <div>
+        <ion-input
+          label="CEP" labelPlacement="stacked" fill="outline"
+          placeholder="00000-000" inputmode="numeric" [maxlength]="9"
+          [value]="form().cep" (ionInput)="alterar('cep', $event)"
+        ></ion-input>
+        @if (erros().cep) { <div class="pp-erro">{{ erros().cep }}</div> }
+      </div>
+      <ion-input
+        label="Logradouro" labelPlacement="stacked" fill="outline" placeholder="Rua, Avenida, etc."
+        [value]="form().logradouro" (ionInput)="alterar('logradouro', $event)"
+      ></ion-input>
+      <ion-input
+        label="Número" labelPlacement="stacked" fill="outline" placeholder="123"
+        [value]="form().numero" (ionInput)="alterar('numero', $event)"
+      ></ion-input>
+      <ion-input
+        label="Complemento" labelPlacement="stacked" fill="outline" placeholder="Apt, Bloco, etc."
+        [value]="form().complemento" (ionInput)="alterar('complemento', $event)"
+      ></ion-input>
+      <ion-input
+        label="Bairro" labelPlacement="stacked" fill="outline" placeholder="Nome do bairro"
+        [value]="form().bairro" (ionInput)="alterar('bairro', $event)"
+      ></ion-input>
+      <ion-input
+        label="Cidade" labelPlacement="stacked" fill="outline" placeholder="Cidade"
+        [value]="form().cidade" (ionInput)="alterar('cidade', $event)"
+      ></ion-input>
+    </div>
+
+    <ion-select
+      label="Estado" labelPlacement="stacked" fill="outline" placeholder="UF" interface="action-sheet"
+      cancelText="Cancelar" [value]="form().uf" (ionChange)="selecionarUf($event.detail.value)"
+    >
+      @for (uf of ufs; track uf) {
+        <ion-select-option [value]="uf">{{ uf }}</ion-select-option>
+      }
+    </ion-select>
+
+    <ion-button class="pp-botao" color="secondary" expand="block" type="submit" [disabled]="salvando()">
+      Salvar cliente
+    </ion-button>
+  </form>
+</ion-content>

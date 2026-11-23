@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">ParkPag</string>
+    <string name="title_activity_main">ParkPag</string>
+    <string name="package_name">br.com.parkpag.app</string>
+    <string name="custom_url_scheme">br.com.parkpag.app</string>
+</resources>

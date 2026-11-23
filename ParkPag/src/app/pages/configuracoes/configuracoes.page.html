@@ -1,0 +1,64 @@
+<app-cabecalho titulo="Configurações"></app-cabecalho>
+
+<ion-content class="ion-padding">
+  <form class="pp-card pp-form" (submit)="$event.preventDefault(); salvar()">
+    <h2>{{ emEdicao() ? 'Editar tarifa' : 'Nova tarifa' }}</h2>
+
+    <ion-input
+      label="Descrição *" labelPlacement="stacked" fill="outline" placeholder="Ex.: Padrão"
+      [value]="form().descricao" (ionInput)="alterar('descricao', $event)"
+    ></ion-input>
+    @if (erros().descricao) { <div class="pp-erro">{{ erros().descricao }}</div> }
+
+    <div class="pp-grade">
+      <div>
+        <ion-input
+          label="Valor por hora (R$) *" labelPlacement="stacked" fill="outline"
+          placeholder="5,00" inputmode="decimal"
+          [value]="form().valorHora" (ionInput)="alterar('valorHora', $event)"
+        ></ion-input>
+        @if (erros().valorHora) { <div class="pp-erro">{{ erros().valorHora }}</div> }
+      </div>
+      <div>
+        <ion-input
+          label="Diária (R$)" labelPlacement="stacked" fill="outline"
+          placeholder="Opcional" inputmode="decimal"
+          [value]="form().valorDiaria" (ionInput)="alterar('valorDiaria', $event)"
+        ></ion-input>
+        @if (erros().valorDiaria) { <div class="pp-erro">{{ erros().valorDiaria }}</div> }
+      </div>
+    </div>
+
+    <ion-button class="pp-botao" color="secondary" expand="block" type="submit" [disabled]="salvando()">
+      {{ emEdicao() ? 'Salvar alterações' : 'Salvar tarifa' }}
+    </ion-button>
+    @if (emEdicao()) {
+      <ion-button fill="clear" expand="block" (click)="cancelarEdicao()">Cancelar edição</ion-button>
+    }
+  </form>
+
+  <div class="pp-secao">Tarifas cadastradas</div>
+  <p class="pp-sub">
+    A cobrança arredonda a fração de hora para cima. Quando há diária, cada período de 24 horas
+    custa no máximo o valor da diária.
+  </p>
+
+  @for (t of tarifas(); track t.id_tarifa) {
+    <div class="pp-card pp-linha">
+      <div class="pp-clicavel" (click)="editar(t)">
+        <div class="pp-titulo">{{ t.descricao }}</div>
+        <div class="pp-sub">
+          {{ t.valor_hora | moeda }}/h{{ t.valor_diaria !== null ? ' · diária ' + (t.valor_diaria | moeda) : '' }}
+        </div>
+      </div>
+      <div>
+        <ion-button fill="clear" size="small" (click)="editar(t)" aria-label="Editar tarifa">
+          <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" size="small" color="danger" (click)="excluir(t)" aria-label="Excluir tarifa">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  }
+</ion-content>

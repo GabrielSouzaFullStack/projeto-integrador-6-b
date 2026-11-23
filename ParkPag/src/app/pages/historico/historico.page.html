@@ -1,0 +1,47 @@
+<app-cabecalho titulo="Histórico de movimentações"></app-cabecalho>
+
+<ion-content class="ion-padding">
+  @for (e of estadias(); track e.id_estadia) {
+    <div class="pp-card pp-clicavel pp-linha" (click)="abrir(e)">
+      <div>
+        <div class="pp-titulo">{{ e.placa | placa }} · {{ e.nome_cliente }}</div>
+        <div class="pp-sub">
+          {{ e.data_hora_entrada | dataBr: 'curta' }} · {{ e.data_hora_entrada | dataBr: 'hora' }} –
+          @if (e.data_hora_saida) {
+            {{ e.data_hora_saida | dataBr: 'hora' }} · {{ e.tempo_permanencia | duracao }}
+          } @else {
+            em aberto
+          }
+        </div>
+      </div>
+      <div>
+        <div class="pp-valor">{{ e.data_hora_saida ? (e.valor_total | moeda) : '—' }}</div>
+        <div class="pp-sub">
+          {{ !e.data_hora_saida ? 'No pátio' : e.status_pagamento === 'PAGO' ? 'Pago' : 'Pendente' }}
+        </div>
+      </div>
+    </div>
+  } @empty {
+    @if (!carregando()) {
+      <div class="pp-vazio">Nenhuma movimentação registrada ainda.</div>
+    }
+  }
+
+  <div class="pp-card">
+    <h2>Resumo do período</h2>
+    <div class="pp-divisor"></div>
+    <div class="pp-linha"><span class="pp-rotulo">Recebido</span><span class="pp-valor">{{ resumo().recebido | moeda }}</span></div>
+    <div class="pp-linha"><span class="pp-rotulo">A receber</span><span class="pp-valor">{{ resumo().a_receber | moeda }}</span></div>
+    <div class="pp-linha">
+      <span class="pp-rotulo">No pátio agora</span>
+      <span class="pp-valor">{{ resumo().no_patio }} {{ resumo().no_patio === 1 ? 'veículo' : 'veículos' }}</span>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="ion-no-border pp-rodape">
+  <ion-button class="pp-botao" color="primary" expand="block" shape="round" routerLink="/movimentacao/entrada">
+    <ion-icon slot="start" name="add"></ion-icon>
+    Registrar entrada
+  </ion-button>
+</ion-footer>
